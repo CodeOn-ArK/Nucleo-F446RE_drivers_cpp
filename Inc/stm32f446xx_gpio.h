@@ -10,27 +10,51 @@
 
 #include<stdint.h>
 #include"stm32f446xx.h"
+#include <iostream>
 
-typedef struct{
+class GPIO_PinConfig_t:{
 
-	__vo uint8_t GPIO_PinNumber;							// CAN BE ANYONE OF @GPIO_PIN_NUMBERS
-	__vo uint8_t GPIO_PinMode;								// CAN BE ANYONE OF @GPIO_MODES
-	__vo uint8_t GPIO_PinSpeed;								// CAN BE ANYONE OF @GPIO_SPEED
-	__vo uint8_t GPIO_PinPuPdControl;						// CAN BE ANYONE OF @GPIO_PULL_UP_PULL_DOWN
-	__vo uint8_t GPIO_PinOPType;							// CAN BE ANYONE OF @GPIO_OUTPUT_TYPE
-	__vo uint8_t GPIO_PinAltFunMode;
+	   private:
+             __vo uint8_t GPIO_PinNumber;							// CAN BE ANYONE OF @GPIO_PIN_NUMBERS
+	         __vo uint8_t GPIO_PinMode;								// CAN BE ANYONE OF @GPIO_MODES
+	         __vo uint8_t GPIO_PinSpeed;								// CAN BE ANYONE OF @GPIO_SPEED
+	         __vo uint8_t GPIO_PinPuPdControl;						// CAN BE ANYONE OF @GPIO_PULL_UP_PULL_DOWN
+	         __vo uint8_t GPIO_PinOPType;							// CAN BE ANYONE OF @GPIO_OUTPUT_TYPE
+	         __vo uint8_t GPIO_PinAltFunMode;
 
-}GPIO_PinConfig_t;
+
+
+GPIO_PinConfig_t():  GPIO_PinNumber(0), GPIO_PinMode(0),GPIO_PinSpeed(GPIO_SPEED_HIGH),GPIO_PinPuPdControl(GPIO_NO_PUPD	), GPIO_PinOPType(GPIO_OP_TYPE_PP), GPIO_PinAltFunMode(0){}; 
+
+protected:
+void set_Pin(uint8_t pin=0,uint8_t pinmode=0, uint8_t pinaltfunmode=0) {
+   GPIO_PinNumber= pin;
+   GPIO_PinMode=pinmode;
+   GPIO_PinAltFunMode=pinaltfunmode;
+}
+
+
+
+	
+};
+
+
 
 /*
  * THIS IS A HANDLE STRUCTURE FOR GPIO PIN
  */
-typedef struct{
+class GPIO_handle_t: public GPIO_PinConfig_t
+{
 
+public:
 	GPIO_regdef_t *pGPIOx;	//THIS HOLDS THE BASE ADDR OF THE GPIO PORT TO WHICH THE PIN BELONGS
-	GPIO_PinConfig_t GPIO_PinConfig;	//THIS HOLDS GPIO PIN CONFIG SETTINGS
+	void set_Pinvalues(uint8_t p1,uint8_t p2,uint8_t p3){
+    set_Pin(p1,p2,p3);
+}
 
-}GPIO_handle_t;
+   //GPIO_PinConfig_t GPIO_PinConfig;//THIS HOLDS GPIO PIN CONFIG SETTINGS
+
+};
 
 /************************************************************************************************************************************
  * 												 MACROS FOR THE DRIVER																*
@@ -89,7 +113,7 @@ typedef struct{
 
 void GPIO_PeriClkCntrl(GPIO_regdef_t *pGPIOx, uint8_t En_Di);				//CONTROLS GPIO CLOCK
 
-
+//TODO: WE WILL REFACTOR THE FUNCTIONS LATER;
 void GPIO_Init(GPIO_handle_t *pGPIOHandle);									//INITIALIZES GPIO PORT
 void GPIO_DeInit(GPIO_regdef_t *pGPIOx);									//DEINITIALIZES GPIO PORT
 
@@ -104,5 +128,17 @@ void GPIO_ToggleOPin(GPIO_regdef_t *pGPIOx, uint8_t Pin_No);				//TOGGLES A PIN 
 void GPIO_IRQ_ITConfig(uint8_t IRQNumber, uint8_t En_Di);					//CONFIGURES IRQ
 void GPIO_IRQHandling(uint8_t Pin_No);										//HANDLER CODE FOR ISR
 void GPIO_IRQConfig(uint8_t IRQNumber,uint32_t IRQPriority);				// GPIO PRIORITY HANDLER
+
+
+
+
+
+
+
+
+
+
+
+
 
 #endif /* STM32F446XX_GPIO_H_ */

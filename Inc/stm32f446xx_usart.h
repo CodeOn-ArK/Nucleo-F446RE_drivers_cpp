@@ -10,31 +10,53 @@
 
 #include<stdint.h>
 #include"stm32f446xx.h"
+#include<iostream>
 
 /*
  * CONFIG STRUCT FOR USARTx PERIPHERAL
  */
-typedef struct{
+class USART_Config_t:{
 
+private:
 	uint8_t 	USART_Mode;											//@USART_Mode
 	uint32_t 	USART_Baud;											//@USART_Baud
 	uint8_t 	USART_NoOfStopBits;							//@USART_NoOfStopBits
 	uint8_t 	USART_WordLength;								//@USART_WordLength
 	uint8_t 	USART_ParityControl;								//@USART_ParityControl
 	uint8_t 	USART_HWFlowControl;						//@USART_HWFlowControl
+	
+	
+	
+USART_Config_t():USART_Mode(0),USART_Baud(0),USART_NoOfStopBits(0),USART_WordLength(0),USART_ParityControl(0),USART_HWFlowControl(0){};
 
-}USART_Config_t;
+
+protected:
+    void USRTconfig(uint8_t mode=0,uint32_t baud=0,uint8_t stopbits=0,uint8_t wordlength=0,uint8_t paritycontrol=0,uint8_t hwflow=0){
+		USART_Mode=mode;											
+	 	USART_Baud=baud;											
+		USART_NoOfStopBits=stopbits;							
+		USART_WordLength=wordlength;								
+		USART_ParityControl=paritycontrol;								
+	 	USART_HWFlowControl= hwflow;
+	}
+
+}
+
 
 
 /*
  * HANDLE 	STRUCT 	FOR  		USARTx 		PERIPHERAL
  */
-typedef struct{
+class USART_Handle_t:public USART_Config_t
+{
 
+public:
 	USART_RegDef_t	*pUSARTx;
-	USART_Config_t		USART_Config;
+	void handlUSART(uint8_t u1,uint32_t u2,uint8_t u3,uint8_t u4,uint8_t u5,uint8_t u6){
+		USRTconfig(u1,u2,u3,u4,u5,u6);
+	}
 
-}USART_Handle_t;
+};
 
 /************************************************************************************************************************************
  * 																		 MACROS FOR THE DRIVER																						*

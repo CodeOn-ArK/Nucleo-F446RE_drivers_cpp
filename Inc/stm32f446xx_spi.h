@@ -10,11 +10,15 @@
 
 #include<stdint.h>
 #include"stm32f446xx.h"
+#include<iostream>
 
-typedef struct{
+
+class SPI_Config_t:{
 	/*
 	 * CONFIG STRUCT FOR SPIx PERIPHERAL
 	 */
+
+private:
 	uint8_t SPI_DeviceMode;						//CAN BE ANYONE OF @SPI_DeviceMode
 	uint8_t SPI_BusConfig;						//CAN BE ANYONE OF @SPI_BusConfig
 	uint8_t SPI_SclkSpeed;						//CAN BE ANYONE OF @SPI_SclkSpeed
@@ -23,14 +27,35 @@ typedef struct{
 	uint8_t SPI_CPHA;							//CAN BE ANYONE OF @SPI_CPHA
 	uint8_t SPI_SSM;							//CAN BE ANYONE OF @SPI_SSM
 
-}SPI_Config_t;
 
-typedef struct{
+SPI_Config_t():SPI_DeviceMode(0),SPI_BusConfig(0),SPI_SclkSpeed(0),SPI_DFF(0),SPI_CPOL(0),SPI_CPHA(0),SPI_SSM(0){};
+
+
+protected:
+  void SPI_Config(uint8_t devicemode=0,uint8_t busconfig=0,uint8_t sclksped=0,uint8_t dff=0,uint8_t cpol=0,uint8_t cpha=0,uint8_t ssm=0){
+    
+	 SPI_DeviceMode=devicemode;						
+	 SPI_BusConfig=buscongfig;					
+	 SPI_SclkSpeed=sclksped;					
+	 SPI_DFF=dff;
+	 SPI_CPOL=cpol;	
+	 SPI_CPHA=cpha;	
+	 SPI_SSM=ssm;
+  };
+
+}
+
+class SPI_Handle_t: public SPI_Config_t
+{
 	/*
 	 * HANDLE STRUCT FOR SPIx PERIPHERAL
 	 */
+
+public:
 	SPI_RegDef_t *pSPIx;						//HOLDS THE ADDRESS OF THE SPIx(x : 1,2,3) PERIPHERAL ADDRESS
-	SPI_Config_t SPIConfig;
+	void SPI_Handle(uint8_t S1,uint8_t S2,uint8_t S3,uint8_t S4,uint8_t S5,uint8_t S6,uint8_t S7){
+		SPI_Config(S1,S2,S3,S4,S5,S6,S7);
+	};
 	uint8_t		 *pTxBuffer;					//STORES THE APPLICATION Tx BUFFER ADDRESS
 	uint8_t		 *pRxBuffer;					//STORES THE APPLICATION Rx BUFFER ADDRESS
 	uint32_t 	  TxLen;
@@ -38,7 +63,7 @@ typedef struct{
 	uint8_t		  TxState;
 	uint8_t		  RxState;
 
-}SPI_Handle_t;
+}
 
 /************************************************************************************************************************************
  * 																		 MACROS FOR THE DRIVER																						*
