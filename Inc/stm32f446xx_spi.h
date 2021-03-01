@@ -15,7 +15,7 @@
 
 class SPI_Config_t:{
 	/*
-	 * CONFIG STRUCT FOR SPIx PERIPHERAL
+	 * CONFIG class FOR SPIx PERIPHERAL
 	 */
 
 private:
@@ -35,7 +35,7 @@ protected:
   void SPI_Config(uint8_t devicemode=0,uint8_t busconfig=0,uint8_t sclksped=0,uint8_t dff=0,uint8_t cpol=0,uint8_t cpha=0,uint8_t ssm=0){
     
 	 SPI_DeviceMode=devicemode;						
-	 SPI_BusConfig=buscongfig;					
+	 SPI_BusConfig=busconfig;					
 	 SPI_SclkSpeed=sclksped;					
 	 SPI_DFF=dff;
 	 SPI_CPOL=cpol;	

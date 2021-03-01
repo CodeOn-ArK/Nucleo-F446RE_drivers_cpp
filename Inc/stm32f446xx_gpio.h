@@ -24,7 +24,7 @@ class GPIO_PinConfig_t:{
 
 
 
-GPIO_PinConfig_t():  GPIO_PinNumber(0), GPIO_PinMode(0),GPIO_PinSpeed(GPIO_SPEED_HIGH),GPIO_PinPuPdControl(GPIO_NO_PUPD	), GPIO_PinOPType(GPIO_OP_TYPE_PP), GPIO_PinAltFunMode(0){}; 
+GPIO_PinConfig_t():  GPIO_PinNumber(0), GPIO_PinMode(0),GPIO_PinSpeed(GPIO_SPEED_LOW),GPIO_PinPuPdControl(GPIO_NO_PUPD), GPIO_PinOPType(GPIO_OP_TYPE_PP), GPIO_PinAltFunMode(GPIO_ALTFN_OP){}; 
 
 protected:
 void set_Pin(uint8_t pin=0,uint8_t pinmode=0, uint8_t pinaltfunmode=0) {

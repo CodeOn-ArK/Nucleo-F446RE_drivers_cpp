@@ -49,6 +49,15 @@ public:
 	void I2C_handle(uint8_t I1,uint8_t I2,uint8_t I3,uint8_t I4){
 		I2C_Config(I1,I2,I3,I4);
 	}
+	uint8_t			*pTxBuffer;			// !<	  To store the app. Tx buffer address 	>
+	uint8_t			*pRxBuffer;			// !<	  To store the app. Rx buffer addr	>
+	uint32_t			TxLen;					// !<	  To store Tx Len	>
+	uint32_t			RxLen;					// !<	  To store Rx Len	>
+	uint8_t			TxRxState;			// !<	  To store communication state @I2C_application_state	>
+	uint8_t			DevAddr;				// !<	  To store Slave/device	addr	>
+	uint32_t			RxSize;					// !<	  To Store Rx size >
+	uint8_t			Sr	;						// !<	  To store Repeated start value	>
+
 
 };
 
@@ -56,7 +65,6 @@ public:
  * 																			 MACROS FOR THE DRIVER																								*
  * 																TO BE USED WITH I2C_CONFIG STRUCT																						*
  ************************************************************************************************************************************/
-
 /*
  * @I2C_SCLSpeed
  */
@@ -82,6 +90,17 @@ public:
 #define  I2C_FM_DUTY_2				0
 #define  I2C_FM_DUTY_16_9			1
 
+/*
+ * @I2C_application_state
+ */
+#define	I2C_READY						0
+#define	I2C_BUSY_IN_Rx				1
+#define 	I2C_BUSY_IN_Tx				2
+
+
+/*
+ * Status register Flags
+ */
 
 #define I2C_FLAG_SR1_SB				0
 #define I2C_FLAG_SR1_ADDR			1
@@ -109,8 +128,15 @@ public:
 #define I2C_FLAG_SR2_DUALF		7
 #define I2C_FLAG_SR2_PEC			8
 
+/*
+ * I2C EVENT MACROS
+ */
 
+#define I2C_EV_Tx_COMPLETE		0
+#define I2C_EV_Rx_COMPLETE		1
+#define I2C_EV_STOP						2
 
+#define I2C_DISABLE_SR				1
 /************************************************************************************************************************************
  * 												APIS SUPPORTED BY THIS DRIVER																												*
  * 											FOR MORE INFO CHECK THE FUNCTION DESCP																								*
@@ -130,12 +156,22 @@ void I2C_Init(I2C_Handle_t *pI2CHandle);									//INITIALIZES I2C PORT
 void I2C_DeInit(I2C_RegDef_t *pI2Cx);										//DEINITIALIZES I2C PORT
 
 /*
- * DATA TRANSMIT / RECIEVE
+ *BLOCKING		 DATA TRANSMIT / RECIEVE
  */
 
 void I2C_MasterSendData(I2C_Handle_t *pI2CHandle, uint8_t *pTXBuffer, uint32_t Len, uint8_t SlaveAddr);
 void I2C_MasterRecieveData(I2C_Handle_t *pI2CHandle, uint8_t *pRXBuffer, uint32_t Len, uint8_t SlaveAddr);
 
+
+/*
+ * INTERRUPT	DATA TRANSMIT / RECIEVE
+ */
+
+uint8_t I2C_MasterSendDataIT(I2C_Handle_t *pI2CHandle, uint8_t *pTXBuffer, uint32_t Len, uint8_t SlaveAddr, uint8_t Sr);
+uint8_t I2C_MasterRecieveDataIT(I2C_Handle_t *pI2CHandle, uint8_t *pRXBuffer, uint32_t Len, uint8_t SlaveAddr, uint8_t Sr);
+
+void I2C_CloseSendData(I2C_Handle_t *pI2CHandle);
+void I2C_CloseRecieveData(I2C_Handle_t *pI2CHandle);
 /*
  * IRQ CONFIG && ISR HANDLING
  */
@@ -143,6 +179,9 @@ void I2C_MasterRecieveData(I2C_Handle_t *pI2CHandle, uint8_t *pRXBuffer, uint32_
 
 void I2C_IRQ_ITConfig(uint8_t IRQNumber, uint8_t En_Di);					//CONFIGURES IRQ
 void I2C_IRQConfig(uint8_t IRQNumber,uint32_t IRQPriority);					// I2C PRIORITY HANDLER
+
+void I2C_EV_IRQHandling(I2C_Handle_t *pI2CHandle);
+void I2C_ER_IRQHandling(I2C_Handle_t *pI2CHandle);
 
 /*
  * ADDN APIs
